@@ -42,7 +42,7 @@ public class OrderSimpleApiController {
 
     @GetMapping(value = "/api/v3/simple-orders")
     public List<SimpleOrderDto> orderV3() {
-        return orderRepository.findAllWithMemberDerlivery().stream()
+        return orderRepository.findAllWithMemberDelivery().stream()
                 .map(SimpleOrderDto::new)
                 .collect(Collectors.toList());
     }
