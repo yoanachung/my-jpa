@@ -1,6 +1,8 @@
 package study.datajpa.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import study.datajpa.entity.Member;
 
 import java.util.List;
@@ -44,4 +46,12 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
         member member0_ limit 3;
      */
     List<Member> findTop3HelloBy();
+
+    /**
+     * 리포지토리 메서드에 바로 쿼리 정의하기
+     * 메서드명 쿼리보다 복잡한 jpql를 정의하기 좋다.
+     * 오타가 난 경우 컴파일 에러.
+     */
+    @Query("select m from Member m where m.username = :username and m.age = :age")
+    List<Member> findUser(@Param("username") String username, @Param("age") int age);
 }
