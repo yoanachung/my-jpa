@@ -1,8 +1,10 @@
 package study.datajpa.repository;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import study.datajpa.dto.MemberDto;
@@ -129,5 +131,27 @@ class MemberRepositoryTest {
         List<Member> members = memberRepository.findByNames(Arrays.asList("A", "B"));
         assertThat(members.get(0)).isEqualTo(member1);
         assertThat(members.get(1)).isEqualTo(member2);
+    }
+
+    @Test
+    public void returnType() {
+        Member member1 = new Member("A", 10);
+        Member member2 = new Member("B", 20);
+        memberRepository.save(member1);
+        memberRepository.save(member2);
+
+        List<Member> asdf1 = memberRepository.findMembersByUsername("asdf");
+        assertThat(asdf1.size()).isEqualTo(0);
+        assertThat(asdf1).isNotNull();
+
+        Member asdf2 = memberRepository.findMemberByUsername("asdf");
+        assertThat(asdf2).isNull();
+
+        Member member3 = new Member("A", 10);
+        memberRepository.save(member3);
+
+        Assertions.assertThrows(IncorrectResultSizeDataAccessException.class, () -> {
+            Member member = memberRepository.findMemberByUsername("A");
+        });
     }
 }

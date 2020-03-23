@@ -7,6 +7,7 @@ import study.datajpa.dto.MemberDto;
 import study.datajpa.entity.Member;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * JPA 공통 인터페이스 JpaRepository 확장
@@ -73,4 +74,12 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
      */
     @Query("select m from Member m where m.username in :names")
     List<Member> findByNames(@Param("names") List<String> names);
+
+    /**
+     * 반환 타입
+     * List, 단 건 엔티티, Optional, ...
+     */
+    List<Member> findMembersByUsername(String username);
+    Member findMemberByUsername(String username);
+    Optional<Member> findOptionalByUsername(String username);
 }
