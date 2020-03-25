@@ -2,7 +2,7 @@ spring:
   profiles:
     active: local
   datasource:
-    url: jdbc:h2:tcp://localhost/~/jpashop;MVCC=TRUE
+    url: jdbc:h2:tcp://localhost/~/H2/db/jpashop;MVCC=TRUE
     username: sa
     password:
     driver-class-name: org.h2.Driver
@@ -11,7 +11,7 @@ spring:
     port: 6378
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: validate
     properties:
       hibernate:
 #        show_sql: true

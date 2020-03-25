@@ -12,17 +12,22 @@ import javax.persistence.EntityManager;
 @Component
 @RequiredArgsConstructor
 public class InitDb {
+
     private final InitService initService;
+
 //    @PostConstruct
     public void init() {
         initService.dbInit1();
         initService.dbInit2();
     }
+
     @Component
     @Transactional
     @RequiredArgsConstructor
     static class InitService {
+
         private final EntityManager em;
+
         public void dbInit1() {
             Member member = createMember("userA", "서울", "1", "1111");
             em.persist(member);
@@ -36,6 +41,7 @@ public class InitDb {
                     orderItem1, orderItem2);
             em.persist(order);
         }
+
         public void dbInit2() {
             Member member = createMember("userB", "진주", "2", "2222");
             em.persist(member);
@@ -50,6 +56,7 @@ public class InitDb {
                     orderItem2);
             em.persist(order);
         }
+
         private Member createMember(String name, String city, String street,
                                     String zipcode) {
             Member member = new Member();
@@ -57,6 +64,7 @@ public class InitDb {
             member.setAddress(new Address(city, street, zipcode));
             return member;
         }
+
         private Book createBook(String name, int price, int stockQuantity) {
             Book book = new Book();
             book.setName(name);
@@ -64,6 +72,7 @@ public class InitDb {
             book.setStockQuantity(stockQuantity);
             return book;
         }
+
         private Delivery createDelivery(Member member) {
             Delivery delivery = new Delivery();
             delivery.setAddress(member.getAddress());
