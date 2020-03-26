@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -47,6 +48,23 @@ public class CacheTest {
     }
 
     @Test
+    void getByHashLazyLoad() {
+        Article article = articleService.getByHash("hash 1");
+
+        assertThrows(LazyInitializationException.class, () -> {
+            String comment = article.getComments().get(0).getContent();
+        });
+    }
+
+    @Test
+    @Transactional
+    void getByHashLazyLoadInTransaction() {
+        Article article = articleService.getByHash("hash 1");
+        String comment = article.getComments().get(0).getContent();
+        assertThat(comment).isEqualTo("test comment 1");
+    }
+
+    @Test
     void getByHashInCache() {
         Article article1 = articleService.getByHashInCache("hash 1");
         Article article2 = articleService.getByHashInCache("hash 1");
@@ -61,6 +79,17 @@ public class CacheTest {
 
         assertThrows(LazyInitializationException.class, () -> {
             String comment = article2.getComments().get(0).getContent();
+        });
+    }
+
+    @Test
+    @Transactional
+    void cacheLazyLoadingEntityInTransaction() {
+        Article article1 = articleService.getByHashInCache("hash 1");
+        Article article2 = articleService.getByHashInCache("hash 1");
+
+        assertThrows(LazyInitializationException.class, () -> {
+            String comment2 = article2.getComments().get(0).getContent();
         });
     }
 
