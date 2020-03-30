@@ -1,5 +1,7 @@
 package study.datajpa.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -82,4 +84,18 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     List<Member> findMembersByUsername(String username);
     Member findMemberByUsername(String username);
     Optional<Member> findOptionalByUsername(String username);
+
+    /**
+     * 페이징
+     */
+    Page<Member> findByAge(int age, Pageable pageable);
+
+    /**
+     * 페이징
+     * 조인을 해서 total count 성능이 안 나올 경우 쿼리를 분리해도 된다.
+     * 어차피 left join 이고 where 절이 없어 그냥 member 테이블 개수만 조회해도 된다.
+     */
+    @Query(value = "select m from Member m left join m.team t",
+            countQuery = "select count(m.username) from Member m")
+    Page<Member> findByAge2(int age, Pageable pageable);
 }
