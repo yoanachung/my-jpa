@@ -201,4 +201,52 @@ class MemberRepositoryTest {
 
         assertThat(resultCount).isEqualTo(3);
     }
+
+    @Test
+    void findMemberLazy() {
+        Team team1 = new Team("team1");
+        Team team2 = new Team("team2");
+        teamRepository.save(team1);
+        teamRepository.save(team2);
+
+        Member member1 = new Member("member1", 10, team1);
+        Member member2 = new Member("member2", 10, team2);
+        memberRepository.save(member1);
+        memberRepository.save(member2);
+
+        em.flush();
+        em.clear();
+
+        List<Member> members = memberRepository.findAll();
+
+        for (Member member : members) {
+            System.out.println("member = " + member.getUsername());
+            System.out.println("team class = " + member.getTeam().getClass());
+            System.out.println("team = " + member.getTeam().getName());
+        }
+    }
+
+    @Test
+    void findMemberFetchJoin() {
+        Team team1 = new Team("team1");
+        Team team2 = new Team("team2");
+        teamRepository.save(team1);
+        teamRepository.save(team2);
+
+        Member member1 = new Member("member1", 10, team1);
+        Member member2 = new Member("member2", 10, team2);
+        memberRepository.save(member1);
+        memberRepository.save(member2);
+
+        em.flush();
+        em.clear();
+
+        List<Member> members = memberRepository.findMemberFetchJoin();
+
+        for (Member member : members) {
+            System.out.println("member = " + member.getUsername());
+            System.out.println("team class = " + member.getTeam().getClass());
+            System.out.println("team = " + member.getTeam().getName());
+        }
+    }
 }
