@@ -249,4 +249,31 @@ class MemberRepositoryTest {
             System.out.println("team = " + member.getTeam().getName());
         }
     }
+
+    @Test
+    public void queryHint() {
+        // given
+        Member member1 = new Member("member1", 10);
+        memberRepository.save(member1);
+        em.flush();
+        em.clear();
+
+        // when
+        Member findMember = memberRepository.findReadOnlyByUsername("member1");
+        findMember.setUsername("member2");
+
+        em.flush(); // 업데이트 쿼리가 발생하지 않는다. 그냥 객체 값만 바뀐 것.
+    }
+
+    @Test
+    public void lock() {
+        // given
+        Member member1 = new Member("member1", 10);
+        memberRepository.save(member1);
+        em.flush();
+        em.clear();
+
+        // when
+        List<Member> findMembers = memberRepository.findLockByUsername("member1");
+    }
 }
