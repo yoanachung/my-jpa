@@ -15,7 +15,7 @@ import java.util.Optional;
 /**
  * JPA 공통 인터페이스 JpaRepository 확장
  */
-public interface MemberRepository extends JpaRepository<Member, Long> {
+public interface MemberRepository extends JpaRepository<Member, Long>, MemberRepositoryCustom {
 
     /**
      * 쿼리 메서드
